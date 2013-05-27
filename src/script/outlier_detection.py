@@ -4,6 +4,7 @@ This script detects outlier entries in an input data file.
 Details of the algorithm used to follow. 
 
 Usage outlier_detection.py --filename <filename> --key <comma separated list of fields which constitute the key>
+                           --values <comma separated list of fields to run outlier detection on>
 
 """
 # optparse is now deprecated. Development with argparse will continue.
@@ -55,6 +56,7 @@ def main():
     data = get_data(filename, SEPARATOR)
 
     # Outliers based on number of sigmas away from mean
+     
     # Outliers based on density based scan
 
 if __name__ == '__main__':
