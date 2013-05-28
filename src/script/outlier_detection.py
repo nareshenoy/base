@@ -53,6 +53,16 @@ def get_data(filename, key_list, separator):
     return data_dict
 
 def get_outliers_by_sigmas(data, n_sigmas, value_field):
+    """
+    This is a univariate method for outlier detection which
+    relies on an assumption of an underlying known distribution
+    of data.
+
+    This method simply identifies data points which are a 
+    specified number of standard deviations away from the mean of
+    the distribution.
+
+    """
     print '===', value_field, '==='
     all_values = map(lambda x: float(data[x][value_field]), data)
     print all_values
