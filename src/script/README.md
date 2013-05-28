@@ -1,2 +1,2 @@
-Contains all scripts written by me.
+Contains all scripts written by me. The first one pertains to outlier detection.
 
