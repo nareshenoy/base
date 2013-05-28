@@ -10,6 +10,7 @@ Usage outlier_detection.py --filename <filename> --key <comma separated list of 
 # optparse is now deprecated. Development with argparse will continue.
 import argparse
 from copy import deepcopy
+import numpy as np
 
 from tools.files import smart_open
 
@@ -19,11 +20,15 @@ def getopts():
                         help='name of the file to be processed')
     parser.add_argument('--key',
                         help='comma separated list of key fields')
-
+    parser.add_argument('--values',
+                        help='Value fields to evaluate')
     args = parser.parse_args()
+    # Must do some basic argument validation here.
+    # For example, a field cannot be a part of key and
+    # values arguments
     return args
 
-def get_data(filename, separator):
+def get_data(filename, key_list, separator):
     with smart_open(filename) as fh:
         # Get the key line
         col_list = fh.readline().split(separator)
@@ -47,16 +52,34 @@ def get_data(filename, separator):
 
     return data_dict
 
+def get_outliers_by_sigmas(data, n_sigmas, value_field):
+    print '===', value_field, '==='
+    all_values = map(lambda x: float(data[x][value_field]), data)
+    print all_values
+    # mean of all values
+    mu = np.mean(all_values)
+    # sigma
+    stddev = np.std(all_values)
+    for k in data:
+        # Get the value
+        val    = data[k][value_field]
+        zscore = (float(val) - mu) / stddev
+        if zscore > n_sigmas:
+            print 'Key: ', k, 'is more than', n_sigmas,\
+                  'away from mean. Value is: ', val, 'while sigma is', stddev
 def main():
-    args      = getopts()
-    filename  = args.filename
-    SEPARATOR = ','
-    key_list  = args.key.split(SEPARATOR)
- 
-    data = get_data(filename, SEPARATOR)
+    args             = getopts()
+    filename         = args.filename
+    SEPARATOR        = ','
+    key_list         = args.key.split(SEPARATOR)
+    value_field_list = args.values.split(SEPARATOR)
+
+    data = get_data(filename, key_list, SEPARATOR)
 
     # Outliers based on number of sigmas away from mean
-     
+    value_list = args.values.split(SEPARATOR)
+    for value_field in value_field_list:
+        get_outliers_by_sigmas(data=data, n_sigmas=2, value_field=value_field) 
     # Outliers based on density based scan
 
 if __name__ == '__main__':
