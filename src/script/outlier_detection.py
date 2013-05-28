@@ -51,7 +51,33 @@ def get_data(filename, key_list, separator):
             data_dict[key_values] = deepcopy(temp_data_dict)
 
     return data_dict
+def get_outliers_by_median(data, n_sigmas, value_field):
+    """
+    The mean and standard deviation are not robust estimators
+    for identifying outliers. This is because a few errant
+    data points may skew these estimators by a large margin.
 
+    Hence, we use the median and the median absolute deviation (MAD)
+    as estimators in this method.
+
+    MAD = median(|Xi - median(Xi)|)
+    i.e. MAD is the median of the absolute values for deviations
+    from the distributions median
+
+    """
+    print '===', value_field, '==='
+    all_values = map(lambda x: float(data[x][value_field]), data)
+
+    median = np.median(all_values)
+    mad    = np.median(map(lambda x: abs(x - median), all_values))
+
+    for k in data:
+        val = data[k][value_field]
+        zscore = (float(val) - median) / mad
+        if abs(zscore) > n_sigmas:
+            print 'Key: ', k, 'is more than', n_sigmas,\
+                  ' MAD away from median. Value is:', val, 'while MAD is', mad
+    
 def get_outliers_by_sigmas(data, n_sigmas, value_field):
     """
     This is a univariate method for outlier detection which
@@ -65,7 +91,7 @@ def get_outliers_by_sigmas(data, n_sigmas, value_field):
     """
     print '===', value_field, '==='
     all_values = map(lambda x: float(data[x][value_field]), data)
-    print all_values
+
     # mean of all values
     mu = np.mean(all_values)
     # sigma
@@ -74,9 +100,9 @@ def get_outliers_by_sigmas(data, n_sigmas, value_field):
         # Get the value
         val    = data[k][value_field]
         zscore = (float(val) - mu) / stddev
-        if zscore > n_sigmas:
+        if abs(zscore) > n_sigmas:
             print 'Key: ', k, 'is more than', n_sigmas,\
-                  'away from mean. Value is: ', val, 'while sigma is', stddev
+                  'sigmas away from mean. Value is:', val, 'while sigma is', stddev
 def main():
     args             = getopts()
     filename         = args.filename
@@ -89,8 +115,10 @@ def main():
     # Outliers based on number of sigmas away from mean
     value_list = args.values.split(SEPARATOR)
     for value_field in value_field_list:
-        get_outliers_by_sigmas(data=data, n_sigmas=2, value_field=value_field) 
-    # Outliers based on density based scan
+        get_outliers_by_sigmas(data=data, n_sigmas=10, value_field=value_field) 
+    # Outliers based on median
+    for value_field in value_field_list:
+        get_outliers_by_median(data=data, n_sigmas=10, value_field=value_field)
 
 if __name__ == '__main__':
     main()
