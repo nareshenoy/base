@@ -138,16 +138,22 @@ def main():
         mean_arr   = get_mean_arr(np_nd_arr)
         class_2_mean_arr[class_id] = mean_arr
 
-    #print class_2_mean_arr
-    
-    # Now we just calculate the distance of each test data
-    # point from the mean array
+    # First method: Classify on the basis of distance from the mean.
+    # This is a very primitive classifier
     phy_test_data = get_data('/Users/nareshs/Documents/projects/base/datasets/phy_test.dat.zip', 'phy_test.dat')
     cnt = 50001
     for x in phy_test_data:
         for arr in phy_test_data[x]:
             print cnt, get_class(class_2_mean_arr, arr)
             cnt = cnt + 1
+
+    # Second method: Linear regression
+    # Simply put, we will be calculating [b1, b2, b3 .. bn] such that
+    # for the ith observation:
+    # yi = b1 * x1i + b2 * x2i ... + bn * xni
+    # where n is the number of distinct attributes
+    # More details at: http://en.wikipedia.org/wiki/Regression_analysis
+    # Derivation at: http://en.wikipedia.org/wiki/Linear_least_squares_(mathematics)
 
 if __name__ == '__main__':
     main()
