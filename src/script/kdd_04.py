@@ -125,7 +125,25 @@ def get_class(class_2_mean_arr, test_arr):
             min_class = class_id
 
     return min_class
-    
+
+def get_processed_obs(obs, mean_arr):
+    """
+    Replaces missing values with the mean value
+
+    """
+    cols_with_outliers = get_cols_with_outliers()
+    col_num = 0
+    obs_arr = []
+    for (obs_val, mean_val) in zip(obs, mean_arr):
+        obs = obs_val
+        if col_num in cols_with_outliers:
+            outlier_value = get_col_outlier_value(col_num)
+            if obs == outlier_value:
+                obs = mean_val
+        col_num = col_num + 1
+        obs_arr.append(obs)
+    return obs_arr
+
 def main():
 
     getopts()
@@ -144,7 +162,7 @@ def main():
     cnt = 50001
     for x in phy_test_data:
         for arr in phy_test_data[x]:
-            print cnt, get_class(class_2_mean_arr, arr)
+            #print cnt, get_class(class_2_mean_arr, arr)
             cnt = cnt + 1
 
     # Second method: Linear regression
@@ -155,6 +173,42 @@ def main():
     # More details at: http://en.wikipedia.org/wiki/Regression_analysis
     # Derivation at: http://en.wikipedia.org/wiki/Linear_least_squares_(mathematics)
 
+    # y contains the class_ids corresponding to each observation
+    y = []
+    # x contains all the observations 
+    x = []
+    for class_id in phy_data:
+        for obs in phy_data[class_id]:
+            y.append(class_id)
+            x.append(get_processed_obs(obs, class_2_mean_arr[class_id]))
+    x = np.array(x, dtype=np.float32)
+    y = np.array(y, dtype=np.float32)
+    info('Created x and y np arrays')
+
+    x_t      = np.array(x.T, order='C')
+    info('Calculated x.T')
+
+    xt_dot_y = x_t.dot(y)
+    info('Calculated x_t.dot(y)')
+
+    # we want to calculate (x_t * x)-1 * xt_dot_y
+    x_t_x = x_t.dot(x)
+    info('Calculated x_t_x')
+
+    print x_t_x
+    x_t_x_i = np.linalg.inv(x_t_x)
+    info('Calculated inv(x_t_x)')
+
+    b = x_t_x_i.dot(xt_dot_y)
+    print b
+    cnt = 50001
+    
+    for x in phy_test_data:
+        for arr in phy_test_data[x]:
+            val = np.sum(b * arr)
+            print cnt, val
+            cnt = cnt + 1
+    
 if __name__ == '__main__':
     main()
 
