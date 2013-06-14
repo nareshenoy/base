@@ -39,18 +39,19 @@ def get_data(zip_filename, file_name):
         if not data_in_line:
             continue
         obs_number, class_id, attrs = int(data_in_line[0]), data_in_line[1], data_in_line[2:]
+        attrs = map(lambda x: float(x), attrs)
         if class_id in all_data:
-            all_data[class_id].append(map(lambda x: float(x), attrs))
+            all_data[class_id].append(attrs)
         else:
-            all_data[class_id] = [map(lambda x: float(x), attrs)]
+            all_data[class_id] = [attrs]
 
     return all_data
 
 COL_NUM_2_OUTLIER_VALUE = { 
                                 (19, 20, 
                                  21, 43, 
-                                 44, 45) : 999.0,
-                                (28, 54) : 9999.0
+                                 44, 45) : (999.0,),
+                                (28, 54) : (9999.0,)
                           } 
 
 @memoize
@@ -95,7 +96,7 @@ def get_mean_arr(np_nd_arr):
             num_data_pts = 0.0
             sum_data_pts = 0.0
             for data_pt in col_data:
-                if data_pt != outlier_value:
+                if data_pt not in outlier_value:
                     sum_data_pts += data_pt
                     num_data_pts += 1.0
             mean_arr.append(sum_data_pts / num_data_pts)
@@ -113,7 +114,7 @@ def get_class(class_2_mean_arr, test_arr):
         col_num = 0
         for mean_val, test_val in zip(class_2_mean_arr[class_id], test_arr):
             if col_num in cols_with_outliers:
-                if test_val != get_col_outlier_value(col_num):
+                if test_val not in get_col_outlier_value(col_num):
                     dist += (mean_val - test_val) ** 2
                 # If the data point is an outlier, do not consider it 
                 # for distance calculation
@@ -149,10 +150,24 @@ def main():
     getopts()
     # Read the physics dataset
     phy_data = get_data('/Users/nareshs/Documents/projects/base/datasets/phy_train.dat.zip', 'phy_train.dat')
+    # Remove all columns with only zero as the value!
+    for class_id in phy_data:
+        sum_arr = np.sum(phy_data[class_id], axis=0)
+        all_phy_data = np.array(phy_data[class_id])
+        idxs = []
+        for idx, val in enumerate(sum_arr):
+            if abs(val) < 0.01:
+                idxs.append(idx)
+        all_phy_data = np.delete(all_phy_data, idxs, 1)
+        phy_data[class_id] = all_phy_data
+
+    for class_id in phy_data:
+        sum_arr = np.sum(phy_data[class_id], axis=0)
+        print class_id, sum_arr
     class_2_mean_arr = {}
     for class_id in phy_data:
         info('Processing data for class: ' + str(class_id))
-        np_nd_arr  = np.array(phy_data[class_id])
+        np_nd_arr  = phy_data[class_id]
         mean_arr   = get_mean_arr(np_nd_arr)
         class_2_mean_arr[class_id] = mean_arr
 
@@ -162,7 +177,6 @@ def main():
     cnt = 50001
     for x in phy_test_data:
         for arr in phy_test_data[x]:
-            #print cnt, get_class(class_2_mean_arr, arr)
             cnt = cnt + 1
 
     # Second method: Linear regression
@@ -179,23 +193,37 @@ def main():
     x = []
     for class_id in phy_data:
         for obs in phy_data[class_id]:
-            y.append(class_id)
-            x.append(get_processed_obs(obs, class_2_mean_arr[class_id]))
-    x = np.array(x, dtype=np.float32)
-    y = np.array(y, dtype=np.float32)
+            y.append(int(class_id))
+            processed_obs = get_processed_obs(obs, class_2_mean_arr[class_id])
+            x.append(processed_obs)
+            #x.append(obs)
+    x = np.array(x)
+    y = np.array(y)
     info('Created x and y np arrays')
-
-    x_t      = np.array(x.T, order='C')
+    x_t      = x.T
     info('Calculated x.T')
-
     xt_dot_y = x_t.dot(y)
     info('Calculated x_t.dot(y)')
 
+    np.set_printoptions(threshold='nan')
+    
+    for a in x:
+        print a
+    print 'Printed x'
+    for a in x_t:
+        print a
+    print 'Printed x_t'
+    
+    print x.shape, x_t.shape
     # we want to calculate (x_t * x)-1 * xt_dot_y
     x_t_x = x_t.dot(x)
     info('Calculated x_t_x')
-
-    print x_t_x
+    
+    for a in x_t_x:
+        print a
+    print 'Printed x_t_x'
+    
+    print np.linalg.det(x_t_x)
     x_t_x_i = np.linalg.inv(x_t_x)
     info('Calculated inv(x_t_x)')
 
