@@ -194,6 +194,7 @@ def main():
             new_rows.append(n)
 
         phy_test_data[class_id] = new_rows
+    
     fh = open('/tmp/test_mean_method.txt', 'w')
     cnt = 50001
     for x in phy_test_data:
@@ -247,6 +248,44 @@ def main():
             fh.write(str(cnt) + ' ' + str(val) + '\n')
             cnt = cnt + 1
     fh.close()
+
+    # Third method: Perceptron learning algorithm
+    # http://en.wikipedia.org/wiki/Perceptron#Learning_algorithm
+    # http://page.mi.fu-berlin.de/rojas/neural/chapter/K4.pdf
+
+    # Initialize the weights array
+    w0 = []
+    w0.extend([0.0] * phy_data['1'][0].shape[0])
+    w = [w0]
+    info('Initialized weights array of length ' + str(phy_data['1'][0].shape[0]))
+
+    # Initialize threshold
+    gamma = 0.01
+    
+    # Initialize learning rate
+    alpha = 0.1
+
+    all_data = []
+    for class_id in phy_data:
+        for row in phy_data[class_id]:
+            all_data.append((class_id, row))
+    for row in all_data:
+        expected_val = row[0]
+        print len(w[-1]), len(row[1])
+        f_val = sum(w[-1] * row[1])
+        w_new = map(lambda x: x + alpha * (float(class_id) - f_val), w[-1])
+        w.append(w_new)
+
+    cnt = 50001
+    for x in phy_test_data:
+        for arr in phy_test_data[x]:
+            l = len(arr)
+            arr = np.delete(np.array(arr).reshape(1, l), idxs, 1)
+            val = np.sum(w[-1] * arr)
+            print cnt, val
+            cnt = cnt + 1
+
+                    
 
 if __name__ == '__main__':
     main()
