@@ -33,10 +33,11 @@ def get_data(zip_filename, file_name):
     data = fh.read(file_name)
     all_data = {}
     for line in data.split('\n'):
+        line = line.rstrip()
         data_in_line = line.split('\t')
         # Remove trailing whitespace
-        data_in_line = data_in_line[:-1]
-        if not data_in_line:
+        #data_in_line = data_in_line[:-1]
+        if data_in_line == ['']:
             continue
         obs_number, class_id, attrs = int(data_in_line[0]), data_in_line[1], data_in_line[2:]
         attrs = map(lambda x: float(x), attrs)
@@ -135,14 +136,19 @@ def get_processed_obs(obs, mean_arr):
     cols_with_outliers = get_cols_with_outliers()
     col_num = 0
     obs_arr = []
+    #print 'Got array', obs
     for (obs_val, mean_val) in zip(obs, mean_arr):
-        obs = obs_val
+        new_obs = obs_val
+        #print obs_val, mean_val, col_num
         if col_num in cols_with_outliers:
             outlier_value = get_col_outlier_value(col_num)
-            if obs == outlier_value:
-                obs = mean_val
+            #print col_num, new_obs, outlier_value
+            if new_obs in outlier_value:
+                #print 'Found a match'
+                new_obs = mean_val
         col_num = col_num + 1
-        obs_arr.append(obs)
+        obs_arr.append(new_obs)
+    #print 'Returning', obs_arr
     return obs_arr
 
 def main():
@@ -151,19 +157,24 @@ def main():
     # Read the physics dataset
     phy_data = get_data('/Users/nareshs/Documents/projects/base/datasets/phy_train.dat.zip', 'phy_train.dat')
     # Remove all columns with only zero as the value!
+    idxs = []
     for class_id in phy_data:
         sum_arr = np.sum(phy_data[class_id], axis=0)
         all_phy_data = np.array(phy_data[class_id])
-        idxs = []
         for idx, val in enumerate(sum_arr):
-            if abs(val) < 0.01:
+            if abs(val) == 0.0:
                 idxs.append(idx)
+        mean_arr = get_mean_arr(np.array(phy_data[class_id]))
+        idx = 0 
+        for col in all_phy_data.T:
+            if len(np.unique(col)) == 1 or (len(np.unique(col)) == 2 and get_col_outlier_value(idx) in col):
+                idxs.append(idx)
+            idx = idx + 1 
+        idxs = list(set(idxs))
         all_phy_data = np.delete(all_phy_data, idxs, 1)
         phy_data[class_id] = all_phy_data
+    
 
-    for class_id in phy_data:
-        sum_arr = np.sum(phy_data[class_id], axis=0)
-        print class_id, sum_arr
     class_2_mean_arr = {}
     for class_id in phy_data:
         info('Processing data for class: ' + str(class_id))
@@ -174,6 +185,15 @@ def main():
     # First method: Classify on the basis of distance from the mean.
     # This is a very primitive classifier
     phy_test_data = get_data('/Users/nareshs/Documents/projects/base/datasets/phy_test.dat.zip', 'phy_test.dat')
+    for class_id in phy_test_data:
+        np_nd_arr  = np.array(phy_test_data[class_id])
+        mean_arr   = get_mean_arr(np_nd_arr)
+        new_rows = []
+        for x in phy_test_data[class_id]:
+            n = get_processed_obs(x, mean_arr)
+            new_rows.append(n)
+
+        phy_test_data[class_id] = new_rows
     cnt = 50001
     for x in phy_test_data:
         for arr in phy_test_data[x]:
@@ -206,33 +226,33 @@ def main():
     info('Calculated x_t.dot(y)')
 
     np.set_printoptions(threshold='nan')
-    
+    """    
     for a in x:
         print a
     print 'Printed x'
     for a in x_t:
         print a
     print 'Printed x_t'
-    
-    print x.shape, x_t.shape
+    """
     # we want to calculate (x_t * x)-1 * xt_dot_y
     x_t_x = x_t.dot(x)
     info('Calculated x_t_x')
-    
+    """
     for a in x_t_x:
         print a
     print 'Printed x_t_x'
-    
-    print np.linalg.det(x_t_x)
+    """
     x_t_x_i = np.linalg.inv(x_t_x)
     info('Calculated inv(x_t_x)')
 
     b = x_t_x_i.dot(xt_dot_y)
-    print b
     cnt = 50001
-    
+
     for x in phy_test_data:
         for arr in phy_test_data[x]:
+            #print arr
+            l = len(arr)
+            arr = np.delete(np.array(arr).reshape(1, l), idxs, 1)
             val = np.sum(b * arr)
             print cnt, val
             cnt = cnt + 1
