@@ -194,10 +194,13 @@ def main():
             new_rows.append(n)
 
         phy_test_data[class_id] = new_rows
+    fh = open('/tmp/test_mean_method.txt', 'w')
     cnt = 50001
     for x in phy_test_data:
         for arr in phy_test_data[x]:
+            fh.write(str(cnt) + ' ' + str(get_class(class_2_mean_arr, arr)) + '\n')
             cnt = cnt + 1
+    fh.close()
 
     # Second method: Linear regression
     # Simply put, we will be calculating [b1, b2, b3 .. bn] such that
@@ -216,7 +219,7 @@ def main():
             y.append(int(class_id))
             processed_obs = get_processed_obs(obs, class_2_mean_arr[class_id])
             x.append(processed_obs)
-            #x.append(obs)
+
     x = np.array(x)
     y = np.array(y)
     info('Created x and y np arrays')
@@ -225,38 +228,26 @@ def main():
     xt_dot_y = x_t.dot(y)
     info('Calculated x_t.dot(y)')
 
-    np.set_printoptions(threshold='nan')
-    """    
-    for a in x:
-        print a
-    print 'Printed x'
-    for a in x_t:
-        print a
-    print 'Printed x_t'
-    """
     # we want to calculate (x_t * x)-1 * xt_dot_y
     x_t_x = x_t.dot(x)
     info('Calculated x_t_x')
-    """
-    for a in x_t_x:
-        print a
-    print 'Printed x_t_x'
-    """
+    
     x_t_x_i = np.linalg.inv(x_t_x)
     info('Calculated inv(x_t_x)')
 
     b = x_t_x_i.dot(xt_dot_y)
-    cnt = 50001
 
+    fh = open('/tmp/test_linalg.txt', 'w')
+    cnt = 50001
     for x in phy_test_data:
         for arr in phy_test_data[x]:
-            #print arr
             l = len(arr)
             arr = np.delete(np.array(arr).reshape(1, l), idxs, 1)
             val = np.sum(b * arr)
-            print cnt, val
+            fh.write(str(cnt) + ' ' + str(val) + '\n')
             cnt = cnt + 1
-    
+    fh.close()
+
 if __name__ == '__main__':
     main()
 
