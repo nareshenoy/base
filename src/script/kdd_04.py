@@ -207,7 +207,8 @@ def main():
     # Third method: Perceptron learning algorithm
     # http://en.wikipedia.org/wiki/Perceptron#Learning_algorithm
     # http://page.mi.fu-berlin.de/rojas/neural/chapter/K4.pdf
-
+    # More detailed: http://hagan.okstate.edu/4_Perceptron.pdf
+    
     # Initialize the weights array
     w0 = []
     w0.extend([0.0] * phy_data['1'][0].shape[0])
