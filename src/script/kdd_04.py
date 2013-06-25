@@ -211,7 +211,7 @@ def main():
     
     # Initialize the weights array
     w0 = []
-    w0.extend([0.0] * phy_data['1'][0].shape[0])
+    w0.extend([0.01] * phy_data['1'][0].shape[0])
     w = [w0]
     info('Initialized weights array of length ' + str(phy_data['1'][0].shape[0]))
 
@@ -225,12 +225,49 @@ def main():
     for class_id in phy_data:
         for row in phy_data[class_id]:
             all_data.append((class_id, row))
-    for row in all_data:
-        expected_val = row[0]
-        print len(w[-1]), len(row[1])
-        f_val = sum(w[-1] * row[1])
-        w_new = map(lambda x: x + alpha * (float(class_id) - f_val), w[-1])
+
+    iter_num = 1
+    print 'Entering the while loop'
+    while True:
+        for row in all_data:
+            expected_val = row[0]
+            #print len(w[-1]), len(row[1])
+            #print w[-1], row[1]
+            
+            f_val = sum(w[-1] * row[1])
+            print 'expected_val', expected_val, 'f_val', f_val
+            w_new = []
+            for idx, x in enumerate(w[-1]):
+                if float(expected_val) - f_val < 0:
+                    coeff = -1
+                elif float(expected_val) - f_val > 0:
+                    coeff = 1
+                else:
+                    coeff = 0
+                w_new.append(x + alpha * coeff * row[1][idx])
+        print 'Iterated once to calculate weights. Iteration number:', iter_num
+
+        # Check the error!
+        total_num_obs = len(all_data)
+        sum_of_errors = 0.0
+        for row in all_data:
+            f_val = sum(w_new * row[1])
+            expected_val = float(row[0])
+            if expected_val - f_val < 0:
+                err = -1
+            elif expected_val - f_val > 0:
+                err = 1
+            else:
+                err = 0
+            sum_of_errors = abs(err) + sum_of_errors
+        
         w.append(w_new)
+
+        print 'Found sum_of_errors as ' + str(sum_of_errors / total_num_obs) + ' in iteration number ' + str(iter_num)
+        if (sum_of_errors / total_num_obs) < gamma:
+            break
+        # Increase the iteration count
+        iter_num = iter_num + 1
 
     cnt = 50001
     for x in phy_test_data:
