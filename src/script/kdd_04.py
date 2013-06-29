@@ -7,6 +7,7 @@ This script runs on the datasets for KDD Cup '04. No arguments to be passed.
 # optparse is now deprecated. Development with argparse will continue.
 import argparse
 from copy    import deepcopy
+from datetime import datetime
 import logging
 from logging import info
 import numpy as np
@@ -136,7 +137,7 @@ def main():
         np_nd_arr  = phy_data[class_id]
         mean_arr   = get_mean_arr(np_nd_arr)
         class_2_mean_arr[class_id] = mean_arr
-
+    """
     # First method: Classify on the basis of distance from the mean.
     # This is a very primitive classifier
     phy_test_data = get_data('/Users/nareshs/Documents/projects/base/datasets/phy_test.dat.zip', 'phy_test.dat')
@@ -204,14 +205,14 @@ def main():
             cnt = cnt + 1
     fh.close()
 
+    """
     # Third method: Perceptron learning algorithm
     # http://en.wikipedia.org/wiki/Perceptron#Learning_algorithm
     # http://page.mi.fu-berlin.de/rojas/neural/chapter/K4.pdf
     # More detailed: http://hagan.okstate.edu/4_Perceptron.pdf
     
     # Initialize the weights array
-    w0 = []
-    w0.extend([0.01] * phy_data['1'][0].shape[0])
+    w0 = [0.0] * (phy_data['1'][0].shape[0] + 1)
     w = [w0]
     info('Initialized weights array of length ' + str(phy_data['1'][0].shape[0]))
 
@@ -224,48 +225,40 @@ def main():
     all_data = []
     for class_id in phy_data:
         for row in phy_data[class_id]:
-            all_data.append((class_id, row))
+            row = [1.0] + list(row)
+            all_data.append((class_id, np.array(row)))
 
     iter_num = 1
     print 'Entering the while loop'
+    latest_sum_of_errors = float('inf')
     while True:
-        for row in all_data:
-            expected_val = row[0]
-            #print len(w[-1]), len(row[1])
-            #print w[-1], row[1]
+        print datetime.now(), ': Iterating over all data. No.:', iter_num
+        for row_num, row in enumerate(all_data):
+            expected_val = float(row[0])
             
             f_val = sum(w[-1] * row[1])
-            print 'expected_val', expected_val, 'f_val', f_val
+            f_val = 1 if f_val > 0 else 0
+            print datetime.now(), ': Getting new weights'
             w_new = []
             for idx, x in enumerate(w[-1]):
-                if float(expected_val) - f_val < 0:
-                    coeff = -1
-                elif float(expected_val) - f_val > 0:
-                    coeff = 1
-                else:
-                    coeff = 0
-                w_new.append(x + alpha * coeff * row[1][idx])
-        print 'Iterated once to calculate weights. Iteration number:', iter_num
+                w_new.append(x + alpha * (expected_val - f_val) * row[1][idx])
+            print datetime.now(), ': Got new weights'
+            # Check the error!
+            total_num_obs = len(all_data)
+            sum_of_errors = 0.0
+            for test_row in all_data[row_num:]:
+                expected_val = float(test_row[0])
+                f_val        = sum(test_row[1] * w_new)
+                f_val        = 1 if f_val > 0 else 0
+                sum_of_errors += abs(expected_val - f_val)
+            print datetime.now(), ': Got sum of errors'
+            avg_error = sum_of_errors / total_num_obs
 
-        # Check the error!
-        total_num_obs = len(all_data)
-        sum_of_errors = 0.0
-        for row in all_data:
-            f_val = sum(w_new * row[1])
-            expected_val = float(row[0])
-            if expected_val - f_val < 0:
-                err = -1
-            elif expected_val - f_val > 0:
-                err = 1
-            else:
-                err = 0
-            sum_of_errors = abs(err) + sum_of_errors
-        
-        w.append(w_new)
-
-        print 'Found sum_of_errors as ' + str(sum_of_errors / total_num_obs) + ' in iteration number ' + str(iter_num)
-        if (sum_of_errors / total_num_obs) < gamma:
-            break
+            if avg_error < gamma:
+                break
+            print 'After processing ', row_num, ' got avg_error', avg_error            
+            w.append(w_new)
+ 
         # Increase the iteration count
         iter_num = iter_num + 1
 
