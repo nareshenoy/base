@@ -170,27 +170,29 @@ def main():
             
             f_val = sum(w[-1] * row[1])
             f_val = 1 if f_val > 0 else 0
-            print datetime.now(), ': Getting new weights'
+            #print datetime.now(), ': Getting new weights'
             w_new = []
             for idx, x in enumerate(w[-1]):
                 w_new.append(x + alpha * (expected_val - f_val) * row[1][idx])
-            print datetime.now(), ': Got new weights'
-            # Check the error!
-            total_num_obs = len(all_data)
-            sum_of_errors = 0.0
-            for test_row in all_data[row_num:]:
-                expected_val = float(test_row[0])
-                f_val        = sum(test_row[1] * w_new)
-                f_val        = 1 if f_val > 0 else 0
-                sum_of_errors += abs(expected_val - f_val)
-            print datetime.now(), ': Got sum of errors: ', sum_of_errors, ' for ', total_num_obs, ' data points'
-            avg_error = sum_of_errors / total_num_obs
-
-            if avg_error < gamma:
-                break
-            print 'After processing ', row_num, ' got avg_error', avg_error            
+            #print datetime.now(), ': Got new weights'
             w.append(w_new)
- 
+
+        print datetime.now(), 'Done getting weights. Now checking the error'
+
+        # Check the error!
+        total_num_obs = len(all_data)
+        sum_of_errors = 0.0
+        for test_row in all_data:
+            expected_val = float(test_row[0])
+            f_val        = sum(test_row[1] * w_new)
+            f_val        = 1 if f_val > 0 else 0
+            sum_of_errors += abs(expected_val - f_val)
+        print datetime.now(), ': Got sum of errors: ', sum_of_errors, ' for ', total_num_obs, ' data points'
+        avg_error = sum_of_errors / total_num_obs
+        
+        if avg_error < gamma:
+          break
+        print 'After processing ', row_num, ' got avg_error', avg_error            
         # Increase the iteration count
         iter_num = iter_num + 1
 
