@@ -1,0 +1,12 @@
+# This document lists down some links which I 
+# found useful while learning data mining 
+
+http://en.wikibooks.org/wiki/Data_Mining_Algorithms_In_R
+
+http://guidetodatamining.com/
+
+http://codecondo.com/9-free-books-for-learning-data-mining-data-analysis/
+
+http://www.mysliderule.com/learning-paths/data-analysis/learn/
+
+
