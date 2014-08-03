@@ -33,7 +33,13 @@ ${CPP} -o ${BIN_DIR}/linked_list_palindrome ${OBJ_DIR}/linked_list_palindrome.o
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
-          ${BIN_DIR}/linked_list_palindrome
+          ${BIN_DIR}/linked_list_palindrome\
+          ${OBJ_DIR}/merge_sort.o\
+          ${OBJ_DIR}/binary_search.o\
+          ${OBJ_DIR}/rectangle_overlap.o\
+          ${OBJ_DIR}/linked_list_palindrome.o
 
 all: ${OBJECTS}
+clean: ${OBJECTS};\
+rm ${OBJECTS}
 
