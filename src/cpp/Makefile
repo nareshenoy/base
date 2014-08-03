@@ -23,9 +23,17 @@ ${CPP} -c rectangle_overlap.cpp -o ${OBJ_DIR}/rectangle_overlap.o
 ${BIN_DIR}/rectangle_overlap : ${OBJ_DIR}/rectangle_overlap.o;\
 ${CPP} -o ${BIN_DIR}/rectangle_overlap ${OBJ_DIR}/rectangle_overlap.o
 
+# Build linked list palindrome checker
+${OBJ_DIR}/linked_list_palindrome.o : linked_list_palindrome.cpp;\
+${CPP} -c linked_list_palindrome.cpp -o ${OBJ_DIR}/linked_list_palindrome.o
+
+${BIN_DIR}/linked_list_palindrome : ${OBJ_DIR}/linked_list_palindrome.o;\
+${CPP} -o ${BIN_DIR}/linked_list_palindrome ${OBJ_DIR}/linked_list_palindrome.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
-          ${BIN_DIR}/rectangle_overlap
+          ${BIN_DIR}/rectangle_overlap\
+          ${BIN_DIR}/linked_list_palindrome
 
 all: ${OBJECTS}
 
