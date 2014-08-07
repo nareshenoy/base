@@ -9,4 +9,5 @@ http://codecondo.com/9-free-books-for-learning-data-mining-data-analysis/
 
 http://www.mysliderule.com/learning-paths/data-analysis/learn/
 
+http://columbia-applied-data-science.github.io/appdatasci.pdf
 
