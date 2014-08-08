@@ -30,14 +30,23 @@ ${CPP} -c linked_list_palindrome.cpp -o ${OBJ_DIR}/linked_list_palindrome.o
 ${BIN_DIR}/linked_list_palindrome : ${OBJ_DIR}/linked_list_palindrome.o;\
 ${CPP} -o ${BIN_DIR}/linked_list_palindrome ${OBJ_DIR}/linked_list_palindrome.o
 
+# Build binary tree
+${OBJ_DIR}/binary_tree.o : binary_tree.cpp;\
+${CPP} -c binary_tree.cpp -o ${OBJ_DIR}/binary_tree.o
+
+${BIN_DIR}/binary_tree : ${OBJ_DIR}/binary_tree.o;\
+${CPP} -o ${BIN_DIR}/binary_tree ${OBJ_DIR}/binary_tree.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
           ${BIN_DIR}/linked_list_palindrome\
+          ${BIN_DIR}/binary_tree\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
-          ${OBJ_DIR}/linked_list_palindrome.o
+          ${OBJ_DIR}/linked_list_palindrome.o\
+          ${OBJ_DIR}/binary_tree.o
 
 all: ${OBJECTS}
 clean: ${OBJECTS};\
