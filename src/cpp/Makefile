@@ -31,7 +31,7 @@ ${BIN_DIR}/linked_list_palindrome : ${OBJ_DIR}/linked_list_palindrome.o;\
 ${CPP} -o ${BIN_DIR}/linked_list_palindrome ${OBJ_DIR}/linked_list_palindrome.o
 
 # Build binary tree
-${OBJ_DIR}/binary_tree.o : binary_tree.cpp;\
+${OBJ_DIR}/binary_tree.o : binary_tree.cpp ${INCLUDE}/binary_tree.h;\
 ${CPP} -c binary_tree.cpp -o ${OBJ_DIR}/binary_tree.o
 
 ${BIN_DIR}/binary_tree : ${OBJ_DIR}/binary_tree.o;\
