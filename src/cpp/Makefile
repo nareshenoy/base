@@ -37,16 +37,25 @@ ${CPP} -c binary_tree.cpp -o ${OBJ_DIR}/binary_tree.o
 ${BIN_DIR}/binary_tree : ${OBJ_DIR}/binary_tree.o;\
 ${CPP} -o ${BIN_DIR}/binary_tree ${OBJ_DIR}/binary_tree.o
 
+# Build stack
+${OBJ_DIR}/stack.o : stack.cpp;\
+${CPP} -c stack.cpp -o ${OBJ_DIR}/stack.o
+
+${BIN_DIR}/stack : ${OBJ_DIR}/stack.o;\
+${CPP} -o ${BIN_DIR}/stack ${OBJ_DIR}/stack.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
           ${BIN_DIR}/linked_list_palindrome\
           ${BIN_DIR}/binary_tree\
+          ${BIN_DIR}/stack\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
           ${OBJ_DIR}/linked_list_palindrome.o\
-          ${OBJ_DIR}/binary_tree.o
+          ${OBJ_DIR}/binary_tree.o\
+          ${OBJ_DIR}/stack.o
 
 all: ${OBJECTS}
 clean: ${OBJECTS};\
