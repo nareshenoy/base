@@ -44,18 +44,27 @@ ${CPP} -c stack.cpp -o ${OBJ_DIR}/stack.o
 ${BIN_DIR}/stack : ${OBJ_DIR}/stack.o;\
 ${CPP} -o ${BIN_DIR}/stack ${OBJ_DIR}/stack.o
 
+# Build max_bst
+${OBJ_DIR}/max_bst.o : max_bst.cpp ${INCLUDE}/binary_tree.h;\
+${CPP} -c max_bst.cpp -o ${OBJ_DIR}/max_bst.o
+
+${BIN_DIR}/max_bst : ${OBJ_DIR}/max_bst.o;\
+${CPP} -o ${BIN_DIR}/max_bst ${OBJ_DIR}/max_bst.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
           ${BIN_DIR}/linked_list_palindrome\
           ${BIN_DIR}/binary_tree\
           ${BIN_DIR}/stack\
+          ${BIN_DIR}/max_bst\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
           ${OBJ_DIR}/linked_list_palindrome.o\
           ${OBJ_DIR}/binary_tree.o\
-          ${OBJ_DIR}/stack.o
+          ${OBJ_DIR}/stack.o\
+          ${OBJ_DIR}/max_bst.o
 
 all: ${OBJECTS}
 clean: ${OBJECTS};\
