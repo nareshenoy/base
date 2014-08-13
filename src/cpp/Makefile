@@ -1,4 +1,4 @@
-CPP = g++ -I include -Wc++11-extensions
+CPP = g++ -I include 
 INCLUDE = include
 OBJ_DIR = obj
 BIN_DIR = bin
