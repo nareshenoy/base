@@ -1,4 +1,5 @@
 CPP = g++ -I include 
+RM = rm
 INCLUDE = include
 OBJ_DIR = obj
 BIN_DIR = bin
@@ -51,13 +52,19 @@ ${CPP} -c max_bst.cpp -o ${OBJ_DIR}/max_bst.o
 ${BIN_DIR}/max_bst : ${OBJ_DIR}/max_bst.o;\
 ${CPP} -o ${BIN_DIR}/max_bst ${OBJ_DIR}/max_bst.o
 
-
 # Build sort w.r.t. other array
 ${OBJ_DIR}/sort_wrt_another_array.o : sort_wrt_another_array.cpp ${INCLUDE}/searching.h ${INCLUDE}/sorting.h;\
 ${CPP} -c sort_wrt_another_array.cpp -o ${OBJ_DIR}/sort_wrt_another_array.o
 
 ${BIN_DIR}/sort_wrt_another_array : ${OBJ_DIR}/sort_wrt_another_array.o;\
 ${CPP} -o ${BIN_DIR}/sort_wrt_another_array ${OBJ_DIR}/sort_wrt_another_array.o
+
+# Build sum of two elements
+${OBJ_DIR}/sum_of_elements.o : sum_of_elements.cpp;\
+${CPP} -c sum_of_elements.cpp -o ${OBJ_DIR}/sum_of_elements.o
+
+${BIN_DIR}/sum_of_elements : ${OBJ_DIR}/sum_of_elements.o;\
+${CPP} -o ${BIN_DIR}/sum_of_elements ${OBJ_DIR}/sum_of_elements.o
 
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
@@ -67,6 +74,7 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/stack\
           ${BIN_DIR}/max_bst\
           ${BIN_DIR}/sort_wrt_another_array\
+          ${BIN_DIR}/sum_of_elements\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
@@ -74,9 +82,10 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${OBJ_DIR}/binary_tree.o\
           ${OBJ_DIR}/stack.o\
           ${OBJ_DIR}/max_bst.o\
-          ${OBJ_DIR}/sort_wrt_another_array.o
+          ${OBJ_DIR}/sort_wrt_another_array.o\
+          ${OBJ_DIR}/sum_of_elements.o
 
 all: ${OBJECTS}
 clean: ${OBJECTS};\
-rm ${OBJECTS}
+${RM} ${OBJECTS}
 
