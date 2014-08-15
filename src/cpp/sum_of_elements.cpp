@@ -7,6 +7,8 @@ there exist two elements in in the input array whose sum is exactly x, efficient
 
 #include <iostream>
 #include <vector>
+#include "sorting.h"
+#include "searching.h"
 
 using namespace std;
 
@@ -25,6 +27,18 @@ bool naive_check(vector<int>& arr, int sum) {
     return false;
 }
 
+bool better_check(vector<int>& arr, int sum) {
+    // This is a better solution than naive_check
+    // The complexity here is O(nlogn) since binary search
+    // on a sorted array is O(logn)
+    arr = merge_sort(arr);
+    for(int i = 0;i < arr.size(); i++) {
+        if(binary_search(arr, sum - arr[i], 0, arr.size() - 1) != -1) {
+            return true;
+        }
+    }
+    return false;
+}
 int main() {
     int n, tmp;
     int sum;
@@ -38,7 +52,8 @@ int main() {
     cout << "Enter the sum of elements to check: ";
     cin >> sum;
 
-    bool is_sum = naive_check(arr, sum);
+    //bool is_sum = naive_check(arr, sum);
+    bool is_sum = better_check(arr, sum);
     if(is_sum) {
         cout << "There exists a pair of elements whose sum is " << sum << endl;
     }
@@ -47,3 +62,4 @@ int main() {
     }
     return 0;
 }
+

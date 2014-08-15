@@ -63,7 +63,7 @@ ${CPP} -o ${BIN_DIR}/sort_wrt_another_array ${OBJ_DIR}/sort_wrt_another_array.o
 ${OBJ_DIR}/sum_of_elements.o : sum_of_elements.cpp;\
 ${CPP} -c sum_of_elements.cpp -o ${OBJ_DIR}/sum_of_elements.o
 
-${BIN_DIR}/sum_of_elements : ${OBJ_DIR}/sum_of_elements.o;\
+${BIN_DIR}/sum_of_elements : ${OBJ_DIR}/sum_of_elements.o ${INCLUDE}/searching.h ${INCLUDE}/sorting.h;\
 ${CPP} -o ${BIN_DIR}/sum_of_elements ${OBJ_DIR}/sum_of_elements.o
 
 OBJECTS = ${BIN_DIR}/merge_sort\
