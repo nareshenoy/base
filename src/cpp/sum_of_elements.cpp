@@ -9,6 +9,7 @@ there exist two elements in in the input array whose sum is exactly x, efficient
 #include <vector>
 #include "sorting.h"
 #include "searching.h"
+#include <unordered_map>
 
 using namespace std;
 
@@ -39,6 +40,24 @@ bool better_check(vector<int>& arr, int sum) {
     }
     return false;
 }
+
+bool best_check(vector<int>& arr, int sum) {
+    // This method is O(n) in time complexity
+    // However, we have a trade-off since we 
+    // are creating a map which takes O(n)
+    // space.
+    unordered_map<int, bool> elem_map;
+    for(int i = 0;i < arr.size();i ++) {
+        elem_map[arr[i]] = true;
+    }
+    for(int i = 0;i < arr.size();i ++) {
+        if(elem_map.find(sum - arr[i]) != elem_map.end()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 int main() {
     int n, tmp;
     int sum;
@@ -53,7 +72,8 @@ int main() {
     cin >> sum;
 
     //bool is_sum = naive_check(arr, sum);
-    bool is_sum = better_check(arr, sum);
+    //bool is_sum = better_check(arr, sum);
+    bool is_sum = best_check(arr, sum);
     if(is_sum) {
         cout << "There exists a pair of elements whose sum is " << sum << endl;
     }
