@@ -73,6 +73,13 @@ ${CPP} -c min_sum.cpp -o ${OBJ_DIR}/min_sum.o
 ${BIN_DIR}/min_sum : ${OBJ_DIR}/min_sum.o;\
 ${CPP} -o ${BIN_DIR}/min_sum ${OBJ_DIR}/min_sum.o
 
+# Build print paths
+${OBJ_DIR}/num_paths.o : num_paths.cpp;\
+${CPP} -c num_paths.cpp -o ${OBJ_DIR}/num_paths.o
+
+${BIN_DIR}/num_paths : ${OBJ_DIR}/num_paths.o;\
+${CPP} -o ${BIN_DIR}/num_paths ${OBJ_DIR}/num_paths.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
@@ -83,6 +90,7 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/sort_wrt_another_array\
           ${BIN_DIR}/sum_of_elements\
           ${BIN_DIR}/min_sum\
+          ${BIN_DIR}/num_paths\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
@@ -92,7 +100,8 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${OBJ_DIR}/max_bst.o\
           ${OBJ_DIR}/sort_wrt_another_array.o\
           ${OBJ_DIR}/sum_of_elements.o\
-          ${OBJ_DIR}/min_sum.o
+          ${OBJ_DIR}/min_sum.o\
+          ${OBJ_DIR}/num_paths.o
 
 all: ${OBJECTS}
 clean:;\
