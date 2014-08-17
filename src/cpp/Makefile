@@ -80,6 +80,13 @@ ${CPP} -c num_paths.cpp -o ${OBJ_DIR}/num_paths.o
 ${BIN_DIR}/num_paths : ${OBJ_DIR}/num_paths.o;\
 ${CPP} -o ${BIN_DIR}/num_paths ${OBJ_DIR}/num_paths.o
 
+# Build ants
+${OBJ_DIR}/ants.o : ants.cpp;\
+${CPP} -c ants.cpp -o ${OBJ_DIR}/ants.o
+
+${BIN_DIR}/ants : ${OBJ_DIR}/ants.o;\
+${CPP} -o ${BIN_DIR}/ants ${OBJ_DIR}/ants.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
@@ -91,6 +98,7 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/sum_of_elements\
           ${BIN_DIR}/min_sum\
           ${BIN_DIR}/num_paths\
+          ${BIN_DIR}/ants\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
@@ -101,7 +109,8 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${OBJ_DIR}/sort_wrt_another_array.o\
           ${OBJ_DIR}/sum_of_elements.o\
           ${OBJ_DIR}/min_sum.o\
-          ${OBJ_DIR}/num_paths.o
+          ${OBJ_DIR}/num_paths.o\
+          ${OBJ_DIR}/ants.o
 
 all: ${OBJECTS}
 clean:;\
