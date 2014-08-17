@@ -67,7 +67,7 @@ ${BIN_DIR}/sum_of_elements : ${OBJ_DIR}/sum_of_elements.o ${INCLUDE}/searching.h
 ${CPP} -o ${BIN_DIR}/sum_of_elements ${OBJ_DIR}/sum_of_elements.o
 
 # Build min sum
-${OBJ_DIR}/min_sum.o : min_sum.cpp;\
+${OBJ_DIR}/min_sum.o : min_sum.cpp ${INCLUDE}/sorting.h;\
 ${CPP} -c min_sum.cpp -o ${OBJ_DIR}/min_sum.o
 
 ${BIN_DIR}/min_sum : ${OBJ_DIR}/min_sum.o;\

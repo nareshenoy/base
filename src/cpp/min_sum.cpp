@@ -14,50 +14,65 @@ Answer: 1 (+2-3-4-7+13)
 */
 #include <iostream>
 #include <vector>
+#include "sorting.h"
 
 using namespace std;
 
 #define PRINT(a) cout << #a << " = " << a << endl;
 
-void find_top_two(vector<int>& arr, vector<vector<int>::iterator>& it_arr) {
-    
-    // Erase everything
-    it_arr.clear();
-    it_arr.push_back(arr.begin());
-    it_arr.push_back(arr.begin());
+int min_sum(vector<int>& arr) {
+    // This problem can be modeled as a variation of 
+    // the partition problem. We break up arr into
+    // two subsets, the difference of whose sums
+    // is minimum.
 
-    for(vector<int>::iterator it = arr.begin(); it != arr.end(); it ++) {
-        if(*it_arr[0] < *it) {
-            it_arr[1] = it_arr[0];
-            it_arr[0] = it;
+    // Handle special cases
+    if(arr.size() == 0) {
+        return 0;
+    }
+    if(arr.size() == 1) {
+        return arr[0];
+    }
+
+    // First, sort arr [O(nlogn)]
+    merge_sort(arr);
+
+    // Now, create two vectors for the two subsets
+    vector<int> subset_1, subset_2;
+    // Push one element on each subset from the end of 
+    // arr (i.e. the two largest elements)
+    subset_1.push_back(arr.back());
+    arr.pop_back();
+    subset_2.push_back(arr.back());
+    arr.pop_back();
+
+    // Initialize the sum of elements in each subset
+    int subset_1_sum = subset_1.back(), subset_2_sum = subset_2.back();
+
+    int tmp;
+    // While there are still elements in arr 
+    while(arr.size() > 0) {
+        tmp = arr.back();
+        arr.pop_back();
+
+        // Check which subset this element should be added to
+        // The logic used is: abs(diff(subset_1_sum, subset_2_sum))
+        // should be minimum after addition of tmp
+
+        if(abs(subset_1_sum + tmp - subset_2_sum) > abs(subset_1_sum - tmp - subset_2_sum)) {
+            // Push on subset 2
+            subset_2.push_back(tmp);
+            subset_2_sum += tmp;
         }
         else {
-            if(it_arr[0] == it_arr[1] or *it_arr[1] < *it) {
-                it_arr[1] = it;
-            }
+            subset_1.push_back(tmp);
+            subset_1_sum += tmp;
         }
     }
+
+    return abs(subset_1_sum - subset_2_sum);
 }
-void swap(vector<int>& arr, int idx1, int idx2) {
-    int tmp;
-    tmp = arr[idx1];
-    arr[idx1] = arr[idx2];
-    arr[idx2] = tmp;
-}
-int min_sum(vector<int>& arr) {
-    int ms = 0;
-    vector<vector<int>::iterator> top_2;
-    while(arr.size() > 1) {
-        find_top_two(arr, top_2);
-        int diff = *top_2[0] - *top_2[1];
-        swap(arr, arr.size() - 1, top_2[0] - arr.begin());
-        arr.pop_back();
-        swap(arr, arr.size() - 1, top_2[1] - arr.begin());
-        arr.pop_back();
-        arr.push_back(diff); 
-    }
-    return arr[0];
-}
+
 void take_input(vector<int>& arr) {
     cout << "Enter the number of elements in the array: ";
     int n;
