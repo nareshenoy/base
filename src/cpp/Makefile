@@ -87,6 +87,13 @@ ${CPP} -c ants.cpp -o ${OBJ_DIR}/ants.o
 ${BIN_DIR}/ants : ${OBJ_DIR}/ants.o;\
 ${CPP} -o ${BIN_DIR}/ants ${OBJ_DIR}/ants.o
 
+# Build min_in_rot
+${OBJ_DIR}/min_in_rot.o : min_in_rot.cpp;\
+${CPP} -c min_in_rot.cpp -o ${OBJ_DIR}/min_in_rot.o
+
+${BIN_DIR}/min_in_rot : ${OBJ_DIR}/min_in_rot.o;\
+${CPP} -o ${BIN_DIR}/min_in_rot ${OBJ_DIR}/min_in_rot.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
@@ -99,6 +106,7 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/min_sum\
           ${BIN_DIR}/num_paths\
           ${BIN_DIR}/ants\
+          ${BIN_DIR}/min_in_rot\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
@@ -110,7 +118,8 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${OBJ_DIR}/sum_of_elements.o\
           ${OBJ_DIR}/min_sum.o\
           ${OBJ_DIR}/num_paths.o\
-          ${OBJ_DIR}/ants.o
+          ${OBJ_DIR}/ants.o\
+          ${OBJ_DIR}/min_in_rot.o
 
 all: ${OBJECTS}
 clean:;\
