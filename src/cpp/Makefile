@@ -101,6 +101,13 @@ ${CPP} -c levenshtein.cpp -o ${OBJ_DIR}/levenshtein.o
 ${BIN_DIR}/levenshtein : ${OBJ_DIR}/levenshtein.o;\
 ${CPP} -o ${BIN_DIR}/levenshtein ${OBJ_DIR}/levenshtein.o
 
+# Build evenly_spaced_ones
+${OBJ_DIR}/evenly_spaced_ones.o : evenly_spaced_ones.cpp ${INCLUDE}/searching.h;\
+${CPP} -c evenly_spaced_ones.cpp -o ${OBJ_DIR}/evenly_spaced_ones.o
+
+${BIN_DIR}/evenly_spaced_ones : ${OBJ_DIR}/evenly_spaced_ones.o;\
+${CPP} -o ${BIN_DIR}/evenly_spaced_ones ${OBJ_DIR}/evenly_spaced_ones.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
@@ -115,6 +122,7 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/ants\
           ${BIN_DIR}/min_in_rot\
           ${BIN_DIR}/levenshtein\
+          ${BIN_DIR}/evenly_spaced_ones\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
@@ -128,7 +136,8 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${OBJ_DIR}/num_paths.o\
           ${OBJ_DIR}/ants.o\
           ${OBJ_DIR}/min_in_rot.o\
-          ${OBJ_DIR}/levenshtein.o
+          ${OBJ_DIR}/levenshtein.o\
+          ${OBJ_DIR}/evenly_spaced_ones.o
 
 all: ${OBJECTS}
 clean:;\
