@@ -94,6 +94,13 @@ ${CPP} -c min_in_rot.cpp -o ${OBJ_DIR}/min_in_rot.o
 ${BIN_DIR}/min_in_rot : ${OBJ_DIR}/min_in_rot.o;\
 ${CPP} -o ${BIN_DIR}/min_in_rot ${OBJ_DIR}/min_in_rot.o
 
+# Build levenshtein
+${OBJ_DIR}/levenshtein.o : levenshtein.cpp;\
+${CPP} -c levenshtein.cpp -o ${OBJ_DIR}/levenshtein.o
+
+${BIN_DIR}/levenshtein : ${OBJ_DIR}/levenshtein.o;\
+${CPP} -o ${BIN_DIR}/levenshtein ${OBJ_DIR}/levenshtein.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
@@ -107,6 +114,7 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/num_paths\
           ${BIN_DIR}/ants\
           ${BIN_DIR}/min_in_rot\
+          ${BIN_DIR}/levenshtein\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
@@ -119,7 +127,8 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${OBJ_DIR}/min_sum.o\
           ${OBJ_DIR}/num_paths.o\
           ${OBJ_DIR}/ants.o\
-          ${OBJ_DIR}/min_in_rot.o
+          ${OBJ_DIR}/min_in_rot.o\
+          ${OBJ_DIR}/levenshtein.o
 
 all: ${OBJECTS}
 clean:;\
