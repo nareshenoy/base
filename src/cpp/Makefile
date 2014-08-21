@@ -108,6 +108,13 @@ ${CPP} -c evenly_spaced_ones.cpp -o ${OBJ_DIR}/evenly_spaced_ones.o
 ${BIN_DIR}/evenly_spaced_ones : ${OBJ_DIR}/evenly_spaced_ones.o;\
 ${CPP} -o ${BIN_DIR}/evenly_spaced_ones ${OBJ_DIR}/evenly_spaced_ones.o
 
+# Build scheduling
+${OBJ_DIR}/scheduling.o : scheduling.cpp ${INCLUDE}/searching.h;\
+${CPP} -c scheduling.cpp -o ${OBJ_DIR}/scheduling.o
+
+${BIN_DIR}/scheduling : ${OBJ_DIR}/scheduling.o;\
+${CPP} -o ${BIN_DIR}/scheduling ${OBJ_DIR}/scheduling.o
+
 OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/binary_search\
           ${BIN_DIR}/rectangle_overlap\
@@ -123,6 +130,7 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${BIN_DIR}/min_in_rot\
           ${BIN_DIR}/levenshtein\
           ${BIN_DIR}/evenly_spaced_ones\
+          ${BIN_DIR}/scheduling\
           ${OBJ_DIR}/merge_sort.o\
           ${OBJ_DIR}/binary_search.o\
           ${OBJ_DIR}/rectangle_overlap.o\
@@ -137,7 +145,8 @@ OBJECTS = ${BIN_DIR}/merge_sort\
           ${OBJ_DIR}/ants.o\
           ${OBJ_DIR}/min_in_rot.o\
           ${OBJ_DIR}/levenshtein.o\
-          ${OBJ_DIR}/evenly_spaced_ones.o
+          ${OBJ_DIR}/evenly_spaced_ones.o\
+          ${OBJ_DIR}/scheduling.o
 
 all: ${OBJECTS}
 clean:;\
