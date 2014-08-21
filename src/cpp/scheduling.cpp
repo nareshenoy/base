@@ -1,3 +1,6 @@
+/*
+http://www.cseblog.com/2012/05/scheduling-problem.html
+*/
 #include <iostream>
 #include <vector>
 
