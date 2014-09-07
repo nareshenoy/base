@@ -1,3 +1,7 @@
+"""
+LeetCode word break ii problem
+
+"""
 class Solution:
     # @param s, a string
     # @param dict, a set of string

@@ -1,3 +1,7 @@
+"""
+LeetCode word ladder 2 
+
+"""
 from time import time
 class Solution:
 

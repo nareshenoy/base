@@ -1,4 +1,10 @@
+"""
+Given a matrix with each cell containing each number of candies,
+and a constraint that you can move only right or down, from the
+top left corner to the bottom right corner, find the path that
+gets you maximum candies.
 
+"""
 
 def max_candies(a, i=0, j=0, visited={}):
     r = len(a)
